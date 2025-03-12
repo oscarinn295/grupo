@@ -1,0 +1,15 @@
+comisiones:
+    las comisiones de cada mes se pagan del 15 al 25 del mes siguiente
+    entonces contamos los movimientos por empleado desde el primero hasta el ultimo dia del mes, pero la operación automatica la hacce el primer dia del mes siguiente
+    añadir sitema de comisiones compartidas
+    se comisiona por venta y por cobranzas
+    las comisiones por ventas no tienen piso
+
+
+poder modificar a mano los vencimientos de todas las cobranzas
+y poder modificar desde cuando se quiere empezar a cobrar
+
+funcion para exportar a otro excel los finalizados
+
+al automatizar la funcion de recargo por mora tambien se va a actualizar los morosos cada vez que se recalculen los recargos asi que bien
+de paso este calculo se hace luego de cambiar el estado entonces al actualizarse el estado, cuenta un dia de mora y cumple con los requerimientos
