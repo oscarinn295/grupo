@@ -67,15 +67,12 @@ with st.container(border=True):
 
 # Preparación de datos de cobranzas totales
 df2 = login.load_data(st.secrets['urls']['finalizados'])
-st.write("Filas en df2 después de cargar:", df2.shape[0])
-st.write("Primeras filas de df2:", df2.head())
 
 missing_cols = [col for col in cobranzas.columns if col not in df2.columns]
 for col in missing_cols:
     df2[col] = pd.NA
 
 df2 = login.filter_valid_dates(df2)
-st.write("Filas en df2 después de filtrar:", df2.shape[0])
 
 cobranzas_total = pd.concat([cobranzas, df2], ignore_index=True)
 
