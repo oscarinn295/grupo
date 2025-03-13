@@ -103,19 +103,26 @@ with st.container(border=True):
 # Aplicar filtros
 cobranzas_valid = cobranzas_total.dropna(subset=['fecha_cobro'])
 cobranzas_filtrado = cobranzas_valid.copy()
+
+# Determinar datos para tabla y métricas
 if not reset and aplicar_fecha and desde and hasta:
-    cobranzas_filtrado = cobranzas_filtrado[
+    month_data = cobranzas_filtrado[
         (cobranzas_filtrado['fecha_cobro'] >= pd.Timestamp(desde)) &
         (cobranzas_filtrado['fecha_cobro'] <= pd.Timestamp(hasta))
     ]
-    
-# Determinar datos para tabla y métricas
-if aplicar_fecha and desde and hasta:
-    month_data = cobranzas_filtrado
+    prestamos_filtrado=prestamos[
+        (prestamos['fecha']>= pd.Timestamp(desde)) &
+        (prestamos['fecha']<= pd.Timestamp(hasta))
+    ]
 else:
-    month_data = cobranzas_valid[
-        (cobranzas_valid['fecha_cobro'].dt.month == selected_month) &
-        (cobranzas_valid['fecha_cobro'].dt.year == selected_year)
+    month_data = cobranzas_filtrado[
+        (cobranzas_filtrado['fecha_cobro'].dt.month == selected_month) &
+        (cobranzas_filtrado['fecha_cobro'].dt.year == selected_year)
+    ]
+
+    prestamos_filtrado=prestamos[
+        (prestamos['fecha'].dt.month== selected_month) &
+        (prestamos['fecha'].dt.year== selected_year)
     ]
 
 # Layout de calendario y filtros
@@ -164,11 +171,15 @@ with col_calendario:
     create_payment_calendar(cobranzas_total, selected_month, selected_year)
 
 with col_filtros:
-    st.write("### Datos Filtrados")
-    display_data = month_data.copy()
+    st.write("### Cobranzas: ")
+    display_data = month_data
     display_data['fecha_cobro'] = display_data['fecha_cobro'].dt.strftime('%d-%m-%Y')
     st.dataframe(display_data[['nombre', 'vendedor', 'n_cuota', 'fecha_cobro', 'pago', 'amortizacion', 'intereses', 'iva']], use_container_width=True)
 
+    st.write("### Ventas: ")
+    display_ventas=prestamos_filtrado
+    display_ventas['fecha'] = display_ventas['fecha'].dt.strftime('%d-%m-%Y')
+    st.dataframe(display_ventas)
 # Resumen de métricas
 with st.container(border=True):
     total_cobros = len(month_data)
@@ -177,11 +188,21 @@ with st.container(border=True):
     total_intereses = month_data['intereses'].sum()
     total_iva = month_data['iva'].sum()
 
+    
 
-    prestamos_filtrado=prestamos[
-        (prestamos['fecha']>= pd.Timestamp(desde)) &
-        (prestamos['fecha']<= pd.Timestamp(hasta))
-    ]
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        st.subheader("Resumen de cobranzas")
+    with col2:
+        st.markdown(f"De {total_cobros} cobros recaudado: ${total_pago:,.2f}")
+    with col3:
+        st.markdown(f"Amortizaciones: ${total_amortizaciones:,.2f}")
+    with col4:
+        st.markdown(f"Intereses : ${total_intereses:,.2f}")
+    with col5:
+        st.markdown(f"IVA: ${total_iva:,.2f}")
+
+with st.container(border=True):
     prestamos_guillermo=prestamos_filtrado[prestamos_filtrado['vendedor']=='guillermo']
     prestamos_francisco=prestamos_filtrado[prestamos_filtrado['vendedor']=='francisco']
     prestamos_johnny=prestamos_filtrado[prestamos_filtrado['vendedor']=='johnny']
@@ -189,17 +210,12 @@ with st.container(border=True):
     creditos_per_vendedor=pd.DataFrame(columns=['vendedor','cantidad de creditos'])
     creditos_per_vendedor['vendedor']=pd.Series(['guillermo','francisco','david','johnny'])
     creditos_per_vendedor['cantidad de creditos']=pd.Series([prestamos_guillermo.shape[0], prestamos_francisco.shape[0], prestamos_david.shape[0], prestamos_johnny.shape[0]])
+    
+
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
-        st.subheader("Resumen de cobranzas")
         st.subheader("Resumen de ventas")
     with col2:
-        st.markdown(f"De {total_cobros} cobros recaudado: ${total_pago:,.2f} \n",unsafe_allow_html=True)
-        st.write(f"De {creditos_per_vendedor['cantidad de creditos'].sum()} se entrego: ${prestamos_filtrado['capital'].sum()}")
+        st.write(f"De {creditos_per_vendedor['cantidad de creditos'].sum()} creditos se entrego: ${prestamos_filtrado['capital'].sum()}")
     with col3:
-        st.markdown(f"Amortizaciones: ${total_amortizaciones:,.2f}\n",unsafe_allow_html=True)
         st.dataframe(creditos_per_vendedor)
-    with col4:
-        st.markdown(f"Intereses : ${total_intereses:,.2f}\n",unsafe_allow_html=True)
-    with col5:
-        st.markdown(f"IVA: ${total_iva:,.2f}\n",unsafe_allow_html=True)
