@@ -161,7 +161,7 @@ def crear_cobranzas(data,redondeo):
             ,
             capital,
             cuota_pura,
-            interes+redondeo+discrepancia,
+            interes,
             amortizacion,
             iva,
             monto_por_cuota,
