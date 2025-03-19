@@ -47,7 +47,8 @@ prestamos_vigentes = prestamos_activos.shape[0]
 moras = cobranzas[cobranzas['estado'] == 'En mora']
 cartones_morosos = prestamos[prestamos['id'].isin(moras['prestamo_id'].unique())]
 morosos = clientes[clientes['nombre'].isin(cartones_morosos['nombre'].unique())]
-
+if st.button("Reiniciar datos"):
+            login.cargar_clientes(forzado=True)
 # Dashboard de métricas
 col1, col2 = st.columns(2)
 with col1:
