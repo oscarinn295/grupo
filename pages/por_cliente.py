@@ -54,7 +54,7 @@ else:
 
     cliente=st.session_state['cliente']
     with st.container(border=True):
-        col1,col2,col3,col4,col5=st.columns(5)
+        col1,col2,col3,col4=st.columns(4)
         with col1:
             if st.button("Volver"):
                 st.session_state['cliente'] = None
@@ -63,10 +63,6 @@ else:
         st.write(f"**DNI**: {cliente['dni']} - **Vendedor**: {cliente['vendedor']}")
         st.write(f"**Dirección**: {cliente['direccion']} - **Celular**: {cliente['celular']}")
         
-        with col5:
-            if st.button("🗑️Eliminar", key=f"delete_{cliente['id']}"):
-                delete(cliente['id'])
-                st.rerun()
 
     vendedores = st.session_state['usuarios']['usuario'].tolist()
 

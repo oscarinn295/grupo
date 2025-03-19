@@ -4,27 +4,27 @@ import datetime as dt
 import pandas as pd
 
 # Verificación de sesión y redirección
-if 'usuario' not in st.session_state:
+if 'usuario' not in st.session_state and 'vendedor' not in st.session_state:
     st.switch_page('inicio.py')
+
+vendedor=st.session_state['vendedor']
 
 # Módulo de login
 login.generarLogin()
 
 # Título de la página
-st.title('Reporte general')
+st.title(f'Reporte de {vendedor}')
 
 # Carga de datos y manejo de errores
 try:
     login.cargar_clientes()
-    prestamos = st.session_state.get('prestamos', pd.DataFrame())
-    clientes = st.session_state.get('clientes', pd.DataFrame())
-    cobranzas = st.session_state.get('cobranzas', pd.DataFrame())
-    usuarios = st.session_state.get('usuarios', pd.DataFrame())
-    
-    if any(df.empty for df in [prestamos, clientes, cobranzas, usuarios]):
-        st.error("No se pudieron cargar todos los datos necesarios.")
-        st.stop()
-    
+    prestamos = st.session_state['prestamos']
+    clientes = st.session_state['clientes']
+    cobranzas = st.session_state['cobranzas']
+    usuarios = st.session_state['usuarios']
+    prestamos=prestamos[prestamos['vendedor']==vendedor]
+    clientes=clientes[clientes['vendedor']==vendedor]
+    cobranzas=cobranzas[cobranzas['vendedor']==vendedor]
     # Preprocesamiento de tipos de datos
     for df, col, dtype in [
         (cobranzas, 'amortizacion', float),
@@ -53,25 +53,12 @@ col1, col2 = st.columns(2)
 with col1:
     st.metric("Préstamos vigentes", prestamos_vigentes)
 
-# Análisis por vendedor
-vendedores = ['johnny', 'david', 'guillermo', 'francisco']
-df_vendedores = pd.DataFrame({
-    'Vendedor': vendedores,
-    'Clientes': [clientes[clientes['vendedor'] == v].shape[0] for v in vendedores],
-    'Préstamos': [prestamos[prestamos['vendedor'] == v].shape[0] for v in vendedores],
-    'Morosos': [morosos[morosos['vendedor'] == v].shape[0] for v in vendedores]
-})
-with st.container(border=True):
-    st.subheader('Datos por vendedor')
-    for vendedor,col in zip(vendedores,st.columns(len(vendedores))):
-        with col:
-            if st.button(f"{vendedor}"):
-                st.session_state['vendedor']=vendedor
-                st.switch_page('pages/reporte_vendedor.py')
-    st.dataframe(df_vendedores, use_container_width=True)
+
 
 # Preparación de datos de cobranzas totales
 df2 = login.load_data(st.secrets['urls']['finalizados'])
+
+df2=df2[df2['vendedor']==vendedor]
 
 missing_cols = [col for col in cobranzas.columns if col not in df2.columns]
 for col in missing_cols:
@@ -217,12 +204,10 @@ with st.container(border=True):
     creditos_per_vendedor['cantidad de creditos']=pd.Series([prestamos_guillermo.shape[0], prestamos_francisco.shape[0], prestamos_david.shape[0], prestamos_johnny.shape[0]])
     
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2= st.columns(2)
     with col1:
         st.subheader("Resumen de ventas")
     with col2:
         st.write(f"De {creditos_per_vendedor['cantidad de creditos'].sum()} creditos se entrego: ${prestamos_filtrado['capital'].sum()}")
-    with col3:
-        st.dataframe(creditos_per_vendedor)
 
 
