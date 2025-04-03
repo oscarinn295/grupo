@@ -386,12 +386,7 @@ def display_cobranzas(cobranzas_df):
         cobranza['monto_recalculado_mora'] = float(cobranza['monto_recalculado_mora'])
         cobranza['monto'] = float(cobranza['monto'])
 
-        pago = st.selectbox(
-            'Monto',
-            ['', "Pago total", 'Otro monto'],
-            index=0,
-            key=f"pago{id}"
-        )
+
         if "init" not in st.session_state:
             monto=0
             st.session_state["init"]=0
@@ -399,21 +394,15 @@ def display_cobranzas(cobranzas_df):
             st.session_state["init"]=1
         col1,col2=st.columns(2)
         with col1:
-            monto = (
-                cobranza['monto_recalculado_mora']
-                if pago == "Pago total"
-                else st.number_input(
+            monto = st.number_input(
                     "Monto",
                     min_value=0,
                     value=0,
                     step=1000,
                     key=f"monto_{id}"
                 ,on_change=show1)
-                if pago == 'Otro monto'
-                else 0
-            )
         with col1:
-            if st.session_state['init']==1 or pago=='Pago total':
+            if st.session_state['init']==1:
                 st.write(f"${monto:,.0f}")
         with col2:   
             medio_pago = st.selectbox(
@@ -423,7 +412,7 @@ def display_cobranzas(cobranzas_df):
             )
             
         registro = 'Pago total' if monto >= cobranza['monto_recalculado_mora'] else 'Pago parcial'
-        if fecha_cobro!='Seleccionar fecha' and medio_pago!='Seleccione una opción' and pago!='' :
+        if fecha_cobro!='Seleccionar fecha' and medio_pago!='Seleccione una opción' :
             with st.form(f"registrar_pago{id}"):
                 cobrador = st.selectbox('Cobrador', vendedores,placeholder='', key=f"cobradores_{id}")
                 obs = st.text_input('Observación', key=f'observacion_{id}')
