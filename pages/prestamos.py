@@ -459,7 +459,7 @@ with col1:
 with col2:
     if st.session_state['user_data']['permisos'].iloc[0]=='admin':
         # Botón para crear un nuevo préstamo
-        with st.popover("Crear Préstamo",use_container_width=False,icon=f'💲'):
+        with st.popover("Crear Préstamo 💲",use_container_width=False):
             crear()
     st.page_link('pages/simulador_creditos.py',label='Simulador de creditos', icon=":material/sell:")
 if st.button("Reiniciar datos"):
