@@ -22,7 +22,9 @@ try:
     clientes = st.session_state['clientes']
     cobranzas = st.session_state['cobranzas']
     usuarios = st.session_state['usuarios']
-    prestamos=prestamos[prestamos['vendedor']==vendedor]
+    prestamos_finalizados= login.load_data(st.secrets['urls']['prestamos_finalizados'])
+    prestamos= pd.concat([prestamos, prestamos_finalizados], ignore_index=True)
+    prestamos[prestamos['vendedor']==vendedor]
     clientes=clientes[clientes['vendedor']==vendedor]
     cobranzas=cobranzas[cobranzas['vendedor']==vendedor]
     # Preprocesamiento de tipos de datos
