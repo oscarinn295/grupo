@@ -16,7 +16,9 @@ st.title('Reporte general')
 # Carga de datos y manejo de errores
 try:
     login.cargar_clientes()
+    prestamos_finalizados= login.load_data(st.secrets['urls']['prestamos_finalizados'])
     prestamos = st.session_state.get('prestamos', pd.DataFrame())
+    prestamos= pd.concat([prestamos, prestamos_finalizados], ignore_index=True)
     clientes = st.session_state.get('clientes', pd.DataFrame())
     cobranzas = st.session_state.get('cobranzas', pd.DataFrame())
     usuarios = st.session_state.get('usuarios', pd.DataFrame())
@@ -73,6 +75,7 @@ with st.container(border=True):
 
 # Preparación de datos de cobranzas totales
 df2 = login.load_data(st.secrets['urls']['finalizados'])
+
 
 missing_cols = [col for col in cobranzas.columns if col not in df2.columns]
 for col in missing_cols:
@@ -225,5 +228,6 @@ with st.container(border=True):
         st.write(f"De {creditos_per_vendedor['cantidad de creditos'].sum()} creditos se entrego: ${prestamos_filtrado['capital'].sum()}")
     with col3:
         st.dataframe(creditos_per_vendedor)
+
 
 
