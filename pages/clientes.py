@@ -124,22 +124,22 @@ def crear():
 def display_table():
     df = st.session_state['clientes']
     lista = ['seleccione un cliente']
-    for nombre in st.session_state['clientes']['nombre'].values.tolist():
+    for nombre in df['nombre'].values.tolist():
         lista.append(nombre)
+    
     nombre_cliente = st.selectbox('Cliente', lista, index=0)
     if nombre_cliente != 'seleccione un cliente':
         df = df[df['nombre'] == nombre_cliente]
-    if st.session_state['user_data']['permisos'].iloc[0] == 'admin':
-        lista2 = ['seleccione un vendedor']
+    lista2 = ['seleccione un vendedor']
 
-        for nombre in vendedores:
-            lista2.append(nombre)
+    for nombre in vendedores:
+        lista2.append(nombre)
 
-        vendedor = st.selectbox('vendedor', lista2, index=0)
-        
-        if vendedor != 'seleccione un vendedor':
-            df = df[df['vendedor'] == vendedor]
-            df = st.session_state["clientes"]
+    vendedor = st.selectbox('vendedor', lista2, index=0)
+    
+    if vendedor != 'seleccione un vendedor':
+        st.session_state['clientes_df'] = df[df['vendedor'] == vendedor]
+        df = st.session_state["clientes_df"]
     
     # Configuración de paginación
     ITEMS_POR_PAGINA = 10

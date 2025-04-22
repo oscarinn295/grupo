@@ -11,13 +11,16 @@ else:
     login.generarLogin()
     login.cargar_clientes()
     col1,col2,col3,col4,col5=st.columns(5)
+    credito = st.session_state['credito']
+    clientes=st.session_state['clientes']
     with col1:
         if st.button("Volver"):
-            st.switch_page("pages/clientes.py")
+            st.session_state['cliente']=next(clientes[clientes['nombre']==credito['nombre']].iterrows())[1]
+            st.switch_page("pages/por_cliente.py")
     with col5:
         if st.button("Reiniciar datos"):
             login.cargar_clientes(forzado=True)
-    credito = st.session_state['credito']
+    
 
     # Cargar los datos de préstamos y cobranzas
     prestamos = login.load_data_vendedores(st.secrets['urls']['prestamos'])
