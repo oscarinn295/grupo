@@ -159,9 +159,8 @@ def save_nuevo(id_value, column_name, new_value, sheet_id):
 
 def load_data_vendedores(url):
     df=pd.read_excel(url,engine='openpyxl')
-    if st.session_state['user_data']['permisos'].iloc[0]!='admin':
-        df=df[df['vendedor']==st.session_state['usuario']]
     return df
+
 def load_data1(url):
     return pd.read_csv(url)
 
@@ -414,14 +413,13 @@ def display_cobranzas(cobranzas_df):
         registro = 'Pago total' if monto >= cobranza['monto_recalculado_mora'] else 'Pago parcial'
         if fecha_cobro!='Seleccionar fecha' and medio_pago!='Seleccione una opción' :
             with st.form(f"registrar_pago{id}"):
-                cobrador = st.selectbox('Cobrador', vendedores,placeholder='', key=f"cobradores_{id}")
                 obs = st.text_input('Observación', key=f'observacion_{id}')
                 submit_button = st.form_submit_button("Registrar")
 
             if submit_button:
                 cobranza['vencimiento'] = str(cobranza['vencimiento'])
                 campos = [
-                    ('cobrador', cobrador),
+                    ('cobrador', st.session_state['usuario']),
                     ('pago', monto),
                     ('estado', registro),
                     ('medio de pago', medio_pago),

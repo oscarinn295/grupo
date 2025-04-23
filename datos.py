@@ -90,8 +90,6 @@ def load_data(url):
 
 def load_data_vendedores(url):
     df=pd.read_excel(url,engine='openpyxl')
-    if st.session_state['user_data']['permisos'].iloc[0]!='admin':
-        df=df[df['vendedor']==st.session_state['usuario']]
     return df
 def load_data1(url):
     return pd.read_csv(url)
