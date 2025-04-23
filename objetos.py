@@ -3,19 +3,17 @@
 import streamlit as st
 import pandas as pd
 
-def load_data_vendedores(url):
+def load_data(url):
     df=pd.read_excel(url,engine='openpyxl')
-    if st.session_state['user_data']['permisos'].iloc[0]!='admin':
-        df=df[df['vendedor']==st.session_state['usuario']]
     return df
 
 
 if "clientes" not in st.session_state:
-    st.session_state["clientes"] = load_data_vendedores(st.secrets['urls']['clientes'])
+    st.session_state["clientes"] = load_data(st.secrets['urls']['clientes'])
 if "cobranzas" not in st.session_state:
-    st.session_state["cobranzas"] = load_data_vendedores(st.secrets['urls']['cobranzas'])
+    st.session_state["cobranzas"] = load_data(st.secrets['urls']['cobranzas'])
 if "prestamos" not in st.session_state:
-    st.session_state["prestamos"] = load_data_vendedores(st.secrets['urls']['prestamos'])
+    st.session_state["prestamos"] = load_data(st.secrets['urls']['prestamos'])
 
 
 clientes= st.session_state['clientes']

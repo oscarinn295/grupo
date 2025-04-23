@@ -88,9 +88,6 @@ def append_data(new_values, sheet_id):
 def load_data(url):
     return pd.read_excel(url,engine='openpyxl')
 
-def load_data_vendedores(url):
-    df=pd.read_excel(url,engine='openpyxl')
-    return df
 def load_data1(url):
     return pd.read_csv(url)
 
@@ -149,16 +146,16 @@ import meta_ediciones
 def cargar_clientes(forzado=False):
     try:
         if forzado==True:
-            st.session_state["clientes"] = load_data_vendedores(st.secrets['urls']['clientes'])
-            st.session_state["cobranzas"] = load_data_vendedores(st.secrets['urls']['cobranzas'])
-            st.session_state["prestamos"] = load_data_vendedores(st.secrets['urls']['prestamos'])
+            st.session_state["clientes"] = load_data(st.secrets['urls']['clientes'])
+            st.session_state["cobranzas"] = load_data(st.secrets['urls']['cobranzas'])
+            st.session_state["prestamos"] = load_data(st.secrets['urls']['prestamos'])
         else:
             if "clientes" not in st.session_state:
-                st.session_state["clientes"] = load_data_vendedores(st.secrets['urls']['clientes'])
+                st.session_state["clientes"] = load_data(st.secrets['urls']['clientes'])
             if "cobranzas" not in st.session_state:
-                st.session_state["cobranzas"] = load_data_vendedores(st.secrets['urls']['cobranzas'])
+                st.session_state["cobranzas"] = load_data(st.secrets['urls']['cobranzas'])
             if "prestamos" not in st.session_state:
-                st.session_state["prestamos"] = load_data_vendedores(st.secrets['urls']['prestamos'])
+                st.session_state["prestamos"] = load_data(st.secrets['urls']['prestamos'])
     except:
         pass
     #meta_ediciones.calcular_recargo()

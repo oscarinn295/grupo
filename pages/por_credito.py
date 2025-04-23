@@ -23,8 +23,8 @@ else:
     
 
     # Cargar los datos de préstamos y cobranzas
-    prestamos = login.load_data_vendedores(st.secrets['urls']['prestamos'])
-    cobranzas = login.load_data_vendedores(st.secrets['urls']['cobranzas'])
+    prestamos = login.load_data(st.secrets['urls']['prestamos'])
+    cobranzas = login.load_data(st.secrets['urls']['cobranzas'])
 
     # Filtrar préstamos y cobranzas por el cliente seleccionado
     cobranzas_credito = cobranzas[cobranzas['prestamo_id'] == credito['id']]

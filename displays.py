@@ -131,7 +131,7 @@ def display_cobranzas(cobranzas_df):
             cobranza['vencimiento'] = str(cobranza['vencimiento'])
             cobranza = cobranza.replace({np.nan: ""}) 
             save(cobranza['id'],'estado','En mora')
-            st.session_state['cobranzas']=load_data_vendedores(urlc)
+            st.session_state['cobranzas']=load_data(urlc)
             cobranza.fillna('')
 
     st.session_state['cobranzas']['id'] = pd.to_numeric(st.session_state['cobranzas']['id'], errors='coerce').astype('Int64')
