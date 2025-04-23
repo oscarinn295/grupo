@@ -157,7 +157,7 @@ def save_nuevo(id_value, column_name, new_value, sheet_id):
 
 
 
-def load_data_vendedores(url):
+def load_data(url):
     df=pd.read_excel(url,engine='openpyxl')
     return df
 
@@ -318,16 +318,16 @@ from datetime import datetime,date
 def cargar_clientes(forzado=False):
     try:
         if forzado==True:
-            st.session_state["clientes"] = load_data_vendedores(st.secrets['urls']['clientes'])
-            st.session_state["cobranzas"] = load_data_vendedores(st.secrets['urls']['cobranzas'])
-            st.session_state["prestamos"] = load_data_vendedores(st.secrets['urls']['prestamos'])
+            st.session_state["clientes"] = load_data(st.secrets['urls']['clientes'])
+            st.session_state["cobranzas"] = load_data(st.secrets['urls']['cobranzas'])
+            st.session_state["prestamos"] = load_data(st.secrets['urls']['prestamos'])
         else:
             if "clientes" not in st.session_state:
-                st.session_state["clientes"] = load_data_vendedores(st.secrets['urls']['clientes'])
+                st.session_state["clientes"] = load_data(st.secrets['urls']['clientes'])
             if "cobranzas" not in st.session_state:
-                st.session_state["cobranzas"] = load_data_vendedores(st.secrets['urls']['cobranzas'])
+                st.session_state["cobranzas"] = load_data(st.secrets['urls']['cobranzas'])
             if "prestamos" not in st.session_state:
-                st.session_state["prestamos"] = load_data_vendedores(st.secrets['urls']['prestamos'])
+                st.session_state["prestamos"] = load_data(st.secrets['urls']['prestamos'])
     except:
         pass
 

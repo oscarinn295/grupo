@@ -14,7 +14,7 @@ st.session_state['cliente']=None
 
 
 def load():
-    return login.load_data_vendedores(url)
+    return login.load_data(url)
 
 def delete(index):#borra una fila completa y acomoda el resto de la hoja para que no quede el espacio en blanco
     login.delete_data(index,idc)
@@ -177,7 +177,7 @@ def crear_cobranzas(data,redondeo):
         i+=1
         montos.append([interes,amortizacion])
         login.append_data(nueva_cobranza,st.secrets['ids']['cobranzas'])
-        st.session_state['cobranzas']=login.load_data_vendedores(st.secrets['urls']['cobranzas'])
+        st.session_state['cobranzas']=login.load_data(st.secrets['urls']['cobranzas'])
 
 def egreso_caja(data):
     fecha_entrega=data[1]
@@ -467,4 +467,4 @@ if st.button("Reiniciar datos"):
 with st.container(border=True):
     display_table()
 with st.expander('Ver cobranzas de creditos finalizados'):
-    st.dataframe(login.load_data_vendedores(st.secrets['urls']['finalizados']))
+    st.dataframe(login.load_data(st.secrets['urls']['finalizados']))

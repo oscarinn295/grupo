@@ -9,7 +9,7 @@ login.cargar_clientes()
 idc=st.secrets['ids']['clientes']
 url = st.secrets['urls']['clientes']
 def load():
-    return login.load_data_vendedores(url)
+    return login.load_data(url)
 
 
 st.session_state['clientes']=load() 

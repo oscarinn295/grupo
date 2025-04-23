@@ -11,7 +11,7 @@ st.session_state['cliente']=None
 
 
 def load():
-    return login.load_data_vendedores(url)
+    return login.load_data(url)
 
 def save(id,column,data):#modifica un solo dato
     login.save_data(id,column,data,idc)

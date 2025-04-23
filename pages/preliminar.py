@@ -14,7 +14,7 @@ login.generarLogin()
 
 clientes=st.session_state['clientes']
 vendedores=st.session_state['usuarios']['usuario'].tolist()
-prestamos=login.load_data_vendedores(st.secrets['urls']['prestamos'])
+prestamos=login.load_data(st.secrets['urls']['prestamos'])
 
 if st.session_state['user_data']['permisos'].iloc[0]!='admin':
     prestamos=prestamos[prestamos['vendedor']==st.session_state['usuario']]
