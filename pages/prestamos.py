@@ -22,6 +22,7 @@ def save(id,column,data):#modifica un solo dato
     login.save_data(id,column,data,idc)
 def new(data):#añade una columna entera de datos
     login.append_data(data,idc)
+    st.session_state['prestamos']=load()
 
 
 if 'usuario' not in st.session_state:
@@ -314,7 +315,7 @@ def crear():
         submit_button=st.form_submit_button('crear')
     
     if submit_button:
-        nuevo_prestamo = [max(st.session_state['prestamos']['id'],default=0) + 1,
+        nuevo_prestamo = [max(st.session_state['prestamos']['id']) + 1,
             fecha.strftime('%d-%m-%Y'),
             nombre_cliente,
             vendedor,
