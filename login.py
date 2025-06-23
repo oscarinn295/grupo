@@ -185,7 +185,7 @@ def generarMenu1():
             st.divider()
             st.page_link("pages/clientes.py", label="Clientes", icon=":material/sell:")
             st.page_link("pages/prestamos.py", label="Préstamos", icon=":material/sell:")
-                st.page_link('pages/reporte_general.py', label="Reporte General", icon=":material/group:")
+            st.page_link('pages/reporte_general.py', label="Reporte General", icon=":material/group:")
             # Botón de cierre de sesión
             if st.button("Salir"):
                 del st.session_state['usuario']
