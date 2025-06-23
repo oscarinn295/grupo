@@ -177,6 +177,73 @@ def new(data):#añade una columna entera de datos
 st.session_state['usuarios']=load_data1(st.secrets['urls']['usuarios'])
 
 
+def generarMenu(usuario,permiso):
+    st.session_state['usuarios']=load_data1(st.secrets['urls']['usuarios'])
+    """
+    Genera el menú en la barra lateral dependiendo del usuario.
+    :param usuario: Usuario autenticado
+    """
+    with st.sidebar:
+        try:
+            dfusuarios = st.session_state['usuarios']
+            dfUsuario = dfusuarios[dfusuarios['usuario'] == usuario]
+            nombre = dfUsuario['nombre'].iloc[0]
+
+            # Bienvenida al usuario
+            st.write(f"### Bienvenido/a, **{nombre}**")
+            st.divider()
+            st.page_link("pages/clientes.py", label="Clientes", icon=":material/sell:")
+            st.page_link("pages/prestamos.py", label="Préstamos", icon=":material/sell:")
+
+            # Administración
+            if permiso=='admin':
+                st.page_link('pages/reporte_general.py', label="Reporte General", icon=":material/group:")
+
+            # Botón de cierre de sesión
+            if st.button("Salir"):
+                del st.session_state['usuario']
+                st.switch_page('inicio.py')
+                
+
+        except FileNotFoundError:
+            st.error("El archivo 'usuarios.csv' no se encontró.")
+        except Exception as e:
+            st.error(f"Error al generar el menú: {e}")
+
+
+from datetime import datetime
+def generarLogin():
+    # Ocultar el menú y el pie de página de Streamlit
+    hide_streamlit_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        </style>
+    """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+    st.session_state['usuarios'] = load_data1(st.secrets['urls']['usuarios'])
+    usuarios = st.session_state['usuarios']
+
+    if 'usuario' in st.session_state:
+        generarMenu(st.session_state['usuario'], st.session_state['user_data']['permisos'].iloc[0])
+    else:
+        try:
+            with st.form('frmLogin'):
+                parUsuario = st.text_input('Usuario')
+                parPassword = st.text_input('Password', type='password')
+                if st.form_submit_button('Ingresar'):
+                    if validarUsuario(parUsuario, parPassword):
+                        st.session_state['usuario'] = parUsuario
+                        usuario = usuarios[usuarios['usuario'] == st.session_state['usuario']]
+                        st.session_state['user_data'] = usuario
+                        st.switch_page('inicio.py')
+                    else:
+                        st.error("Usuario o clave inválidos")
+        except:
+            st.switch_page('inicio.py')
+
+
 def guardar_log(usuario):
 
     worksheet = get_worksheet(st.secrets['ids']['logs'])
@@ -217,42 +284,6 @@ def validarUsuario(usuario, clave):
         st.error(f"Error al validar usuario: {e}")
     return False
 
-def generarMenu(usuario,permiso):
-    st.session_state['usuarios']=load_data1(st.secrets['urls']['usuarios'])
-    """
-    Genera el menú en la barra lateral dependiendo del usuario.
-    :param usuario: Usuario autenticado
-    """
-    with st.sidebar:
-        try:
-            dfusuarios = st.session_state['usuarios']
-            dfUsuario = dfusuarios[dfusuarios['usuario'] == usuario]
-            nombre = dfUsuario['nombre'].iloc[0]
-
-            # Bienvenida al usuario
-            st.write(f"### Bienvenido/a, **{nombre}**")
-            st.divider()
-            st.page_link("pages/clientes.py", label="Clientes", icon=":material/sell:")
-            st.page_link("pages/prestamos.py", label="Préstamos", icon=":material/sell:")
-
-            # Administración
-            if permiso=='admin':
-                st.page_link('pages/reporte_general.py', label="Reporte General", icon=":material/group:")
-
-            # Botón de cierre de sesión
-            if st.button("Salir"):
-                del st.session_state['usuario']
-                st.switch_page('inicio.py')
-                
-
-        except FileNotFoundError:
-            st.error("El archivo 'usuarios.csv' no se encontró.")
-        except Exception as e:
-            st.error(f"Error al generar el menú: {e}")
-
-
-from datetime import datetime
-
 def historial(old_values, new_values):
     """
     Registra en una hoja de Google Sheets un cambio en los datos.
@@ -281,36 +312,7 @@ def historial(old_values, new_values):
     worksheet.append_row(row_new)
 
 
-def generarLogin():
-    # Ocultar el menú y el pie de página de Streamlit
-    hide_streamlit_style = """
-        <style>
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        header {visibility: hidden;}
-        </style>
-    """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-    st.session_state['usuarios'] = load_data1(st.secrets['urls']['usuarios'])
-    usuarios = st.session_state['usuarios']
 
-    if 'usuario' in st.session_state:
-        generarMenu(st.session_state['usuario'], st.session_state['user_data']['permisos'].iloc[0])
-    else:
-        try:
-            with st.form('frmLogin'):
-                parUsuario = st.text_input('Usuario')
-                parPassword = st.text_input('Password', type='password')
-                if st.form_submit_button('Ingresar'):
-                    if validarUsuario(parUsuario, parPassword):
-                        st.session_state['usuario'] = parUsuario
-                        usuario = usuarios[usuarios['usuario'] == st.session_state['usuario']]
-                        st.session_state['user_data'] = usuario
-                        st.switch_page('inicio.py')
-                    else:
-                        st.error("Usuario o clave inválidos")
-        except:
-            st.switch_page('inicio.py')
 
 
 from datetime import datetime,date
