@@ -18,7 +18,7 @@ def save(id,column,data):#modifica un solo dato
     
 def new(data):#añade una fila entera de datos
     login.append_data(data,idc)
-login.generarLogin()
+login.generarMenu1()
 st.session_state['clientes']=load() 
 
 cobranzas=st.session_state['cobranzas']
