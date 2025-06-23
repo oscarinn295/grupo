@@ -27,7 +27,7 @@ def new(data):#añade una columna entera de datos
 
 if 'usuario' not in st.session_state:
     st.switch_page('inicio.py')
-login.generarLogin()
+login.generarMenu1()
 login.cargar_clientes()
 
 
