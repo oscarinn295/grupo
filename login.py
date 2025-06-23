@@ -176,6 +176,25 @@ def new(data):#añade una columna entera de datos
 
 st.session_state['usuarios']=load_data1(st.secrets['urls']['usuarios'])
 
+def generarMenu1():
+    """
+    Genera el menú en la barra lateral dependiendo del usuario.
+    :param usuario: Usuario autenticado
+    """
+    with st.sidebar:
+            st.divider()
+            st.page_link("pages/clientes.py", label="Clientes", icon=":material/sell:")
+            st.page_link("pages/prestamos.py", label="Préstamos", icon=":material/sell:")
+                st.page_link('pages/reporte_general.py', label="Reporte General", icon=":material/group:")
+            # Botón de cierre de sesión
+            if st.button("Salir"):
+                del st.session_state['usuario']
+                st.switch_page('inicio.py')
+        except FileNotFoundError:
+            st.error("El archivo 'usuarios.csv' no se encontró.")
+        except Exception as e:
+            st.error(f"Error al generar el menú: {e}")
+
 
 def generarMenu(usuario,permiso):
     st.session_state['usuarios']=load_data1(st.secrets['urls']['usuarios'])
