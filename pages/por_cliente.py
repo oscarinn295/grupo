@@ -8,7 +8,7 @@ if 'usuario' not in st.session_state:
 if 'cliente' not in st.session_state :
     st.error("No se ha seleccionado ningún cliente.")
 else:
-    login.generarMenu1()
+    login.generarLogin()
     import numpy as np
     idc=st.secrets['ids']['clientes']
 
