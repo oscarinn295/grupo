@@ -190,11 +190,6 @@ def generarMenu1():
             if st.button("Salir"):
                 del st.session_state['usuario']
                 st.switch_page('inicio.py')
-        except FileNotFoundError:
-            st.error("El archivo 'usuarios.csv' no se encontró.")
-        except Exception as e:
-            st.error(f"Error al generar el menú: {e}")
-
 
 def generarMenu(usuario,permiso):
     st.session_state['usuarios']=load_data1(st.secrets['urls']['usuarios'])
